@@ -9,3 +9,8 @@ This is a simple snake game coded in python. Player cannot stop or slow down the
 
 
 <p align="left"> <img src="https://github.com/TOLANY-LANNIE/SnakeGame/blob/master/img/Animation.gif"/>
+
+ ### Lessons learnt
+  - How to draw gridlines in pygame.
+  - How to use 2D tranformations.
+  - Creating objects in pygame that a user can interact with.
