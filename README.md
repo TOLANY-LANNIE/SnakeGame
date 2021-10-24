@@ -12,5 +12,8 @@ This is a simple snake game coded in python. Player cannot stop or slow down the
 
  ### Lessons learnt
   - How to draw gridlines in pygame.
-  - How to use 2D tranformations.
+  - Using 2D tranformations for the splash screen.
   - Creating objects in pygame that a user can interact with.
+  - Using the random library, to position the apple in randomly on the screen
+  - Modularisation
+
