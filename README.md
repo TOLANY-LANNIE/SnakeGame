@@ -18,7 +18,7 @@
 
  ### Lessons learnt
   - How to draw gridlines in pygame.
-  - Using 2D tranformations for the splash screen.
+  - Using 2D tranformations in pygame for the splash screen.
   - Creating objects in pygame that a user can interact with.
   - Using the random library, to position the apple in randomly on the screen
   - Modularisation
