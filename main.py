@@ -69,7 +69,6 @@ def showStartScreen():
     titleSurf = titleFont.render('Snake Game!', True, DARKGREEN, WHITE)
 
     degrees1 = 0
-    degrees2 = 0
     while True:
         SCREEN.fill(WHITE)
         rotatedSurf1 = pygame.transform.rotate(titleSurf, degrees1)
@@ -85,7 +84,6 @@ def showStartScreen():
         pygame.display.update()
         CLOCK.tick(40)
         degrees1 += 3  # rotate by 3 degrees each frame
-        degrees2 += 7  # rotate by 7 degrees each frame
 
 
 def checkForKeyPress():
