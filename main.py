@@ -29,10 +29,21 @@ RIGHT = 'right'
 
 HEAD = 0  # syntactic sugar: index of the snake's head
 
+pygame.mixer.init()
+# Load all sound files
+pygame.mixer.music.load("audio/mixkit-infected-vibes-157.mp3")
+pygame.mixer.music.play(-1)
+eat_apple = pygame.mixer.Sound("audio/mixkit-arcade-space-shooter-dead-notification-272.wav")
+game_over = pygame.mixer.Sound("audio/mixkit-retro-game-notification-212.wav")
+collision_sound = pygame.mixer.Sound("audio/mixkit-sad-game-over-trombone-471.wav")
+
 
 def main():
     global SCREEN, CLOCK, BASICFONT
+    # Setup for sounds. Defaults are good.
+
     pygame.init()
+
     # game title and icon
     pygame.display.set_caption('Snake Game')
     icon = pygame.image.load("img/snakeIcon.png")
@@ -105,6 +116,7 @@ def terminate():
 
 def runGame():
     # Set a random start point.
+    pygame.mixer.music.unpause()
     startx = random.randint(5, CELLWIDTH - 6)
     starty = random.randint(5, CELLHEIGHT - 6)
     snakeCoords = [{'x': startx, 'y': starty},
@@ -134,12 +146,14 @@ def runGame():
         # check if the snake has hit itself or the edge
         if snakeCoords[HEAD]['x'] == -1 or snakeCoords[HEAD]['x'] == CELLWIDTH or snakeCoords[HEAD]['y'] == -1 or \
                 snakeCoords[HEAD]['y'] == CELLHEIGHT:
+            game_over.play()
             return  # game over
         for snakeBody in snakeCoords[1:]:
             if snakeBody['x'] == snakeCoords[HEAD]['x'] and snakeBody['y'] == snakeCoords[HEAD]['y']:
+                game_over.play()
                 return  # game over
 
-        # check if snake has eaten an apply
+        # check if snake has eaten an apple
         if snakeCoords[HEAD]['x'] == apple['x'] and snakeCoords[HEAD]['y'] == apple['y']:
             # don't remove snake's tail segment
             apple = getRandomLocation()  # set a new apple somewhere
@@ -191,6 +205,7 @@ def showGameOverScreen():
 
     SCREEN.blit(gameSurf, gameRect)
     SCREEN.blit(overSurf, overRect)
+    pygame.mixer.music.pause()
     drawPressKeyMsg()
     pygame.display.update()
     pygame.time.wait(500)
