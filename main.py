@@ -29,13 +29,17 @@ RIGHT = 'right'
 
 HEAD = 0  # syntactic sugar: index of the snake's head
 
+RUNNING = True
+
 pygame.mixer.init()
 # Load all sound files
 pygame.mixer.music.load("audio/mixkit-infected-vibes-157.mp3")
-pygame.mixer.music.play(-1)
-eat_apple = pygame.mixer.Sound("audio/mixkit-arcade-space-shooter-dead-notification-272.wav")
-game_over = pygame.mixer.Sound("audio/mixkit-retro-game-notification-212.wav")
+pygame.mixer.music.play(-1, 0.0)
+
+eat_apple = pygame.mixer.Sound("audio/mixkit-retro-game-notification-212.wav")
+eat_apple.set_volume(0.5)
 collision_sound = pygame.mixer.Sound("audio/mixkit-sad-game-over-trombone-471.wav")
+collision_sound.set_volume(0.5)
 
 
 def main():
@@ -127,7 +131,7 @@ def runGame():
     # Start the apple in a random place.
     apple = getRandomLocation()
 
-    while True:  # main game loop
+    while RUNNING:  # main game loop
         for event in pygame.event.get():  # event handling loop
             if event.type == QUIT:
                 terminate()
@@ -140,22 +144,25 @@ def runGame():
                     direction = UP
                 elif (event.key == K_DOWN or event.key == K_s) and direction != UP:
                     direction = DOWN
+                elif event.key == K_SPACE:
+                    pause()
                 elif event.key == K_ESCAPE:
                     terminate()
 
         # check if the snake has hit itself or the edge
         if snakeCoords[HEAD]['x'] == -1 or snakeCoords[HEAD]['x'] == CELLWIDTH or snakeCoords[HEAD]['y'] == -1 or \
                 snakeCoords[HEAD]['y'] == CELLHEIGHT:
-            game_over.play()
+            collision_sound.play()
             return  # game over
         for snakeBody in snakeCoords[1:]:
             if snakeBody['x'] == snakeCoords[HEAD]['x'] and snakeBody['y'] == snakeCoords[HEAD]['y']:
-                game_over.play()
+                collision_sound.play()
                 return  # game over
 
         # check if snake has eaten an apple
         if snakeCoords[HEAD]['x'] == apple['x'] and snakeCoords[HEAD]['y'] == apple['y']:
             # don't remove snake's tail segment
+            eat_apple.play()
             apple = getRandomLocation()  # set a new apple somewhere
         else:
             del snakeCoords[-1]  # remove snake's tail segment
@@ -196,15 +203,15 @@ def drawSnake(snakeCoords):
 
 def showGameOverScreen():
     gameOverFont = pygame.font.Font('freesansbold.ttf', 100)
-    gameSurf = gameOverFont.render('Game Over!', True, RED)
-    overSurf = gameOverFont.render('Start Again?', True, WHITE)
-    gameRect = gameSurf.get_rect()
-    overRect = overSurf.get_rect()
-    gameRect.midtop = (WINDOWWIDTH / 2, 10)
-    overRect.midtop = (WINDOWWIDTH / 2, gameRect.height + 10 + 25)
+    gameOverSurf = gameOverFont.render('Game Over!', True, RED)
+    startSurf = gameOverFont.render('Start Again?', True, WHITE)
+    gameOverRect = gameOverSurf.get_rect()
+    startGameRect = startSurf.get_rect()
+    gameOverRect.midtop = (WINDOWWIDTH / 2, 10)
+    startGameRect.midtop = (WINDOWWIDTH / 2, gameOverRect.height + 10 + 25)
 
-    SCREEN.blit(gameSurf, gameRect)
-    SCREEN.blit(overSurf, overRect)
+    SCREEN.blit(gameOverSurf, gameOverRect)
+    SCREEN.blit(startSurf, startGameRect)
     pygame.mixer.music.pause()
     drawPressKeyMsg()
     pygame.display.update()
@@ -232,6 +239,20 @@ def drawApple(coord):
 
 
 def pause():
+    font = pygame.font.Font('freesansbold.ttf', 80)
+    pauseSurf = font.render('Game Paused!', True, WHITE)
+    pauseRect = pauseSurf.get_rect()
+    pauseRect.midtop = (WINDOWWIDTH / 2, WINDOWHEIGHT/2)
+    SCREEN.blit(pauseSurf, pauseRect)
+    pygame.mixer.music.pause()
+    drawPressKeyMsg()
+    pygame.display.update()
+    pygame.time.wait(5000)
+    checkForKeyPress()  # clear out any key presses in the event queue
+    pygame.mixer.music.unpause()
+
+
+def resume():
     pass
 
 
