@@ -182,6 +182,7 @@ def runGame():
         drawSnake(snakeCoords)
         drawApple(apple)
         drawScore(len(snakeCoords) - 3)
+        drawSpeed(FPS)
         pygame.display.update()
         CLOCK.tick(FPS)
 
@@ -252,8 +253,11 @@ def pause():
     pygame.mixer.music.unpause()
 
 
-def resume():
-    pass
+def drawSpeed(FPS):
+    speedSurf = BASICFONT.render('Speed: %s' % (FPS), True, WHITE)
+    speedRect = speedSurf.get_rect()
+    speedRect.topleft = (WINDOWWIDTH - 120, 40)
+    SCREEN.blit(speedSurf, speedRect)
 
 
 if __name__ == '__main__':
