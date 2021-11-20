@@ -20,7 +20,8 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 DARKGREEN = (0, 155, 0)
 DARKGRAY = (40, 40, 40)
-BGCOLOR = BLACK
+BLUE = (0, 0, 255)
+bgColor = BLACK
 
 UP = 'up'
 DOWN = 'down'
@@ -47,12 +48,12 @@ try:  # Load all sound files
     eat_apple.set_volume(0.5)
     collision_sound = pygame.mixer.Sound("audio/mixkit-sad-game-over-trombone-471.wav")
     collision_sound.set_volume(0.5)
-except:
-    pass
+except FileNotFoundError:
+    print("Wrong file or file path")
 
 
 def main():
-    global SCREEN, CLOCK, BASICFONT  # Variables that can be accessed by any function in the program
+    global SCREEN, CLOCK, BASICFONT, bgColor # Variables that can be accessed by any function in the program
 
     pygame.init()
 
@@ -80,9 +81,9 @@ def drawGrid():
 
 # display Press a key to play.'  on the bottom right corner of the screen function
 def drawPressKeyMsg():
-    pressKeySurf = BASICFONT.render('Press a key to play.', True, DARKGRAY)
+    pressKeySurf = BASICFONT.render('Press v,b or n key to play.', True, DARKGRAY)
     pressKeyRect = pressKeySurf.get_rect()
-    pressKeyRect.topleft = (WINDOWWIDTH - 200, WINDOWHEIGHT - 30)
+    pressKeyRect.topleft = (WINDOWWIDTH - 240, WINDOWHEIGHT - 30)
     SCREEN.blit(pressKeySurf, pressKeyRect)
 
 
@@ -159,6 +160,8 @@ def runGame():
                 elif event.key == K_o:
                     speed = speed - 1  # decrease snake speed by 2 when o is clicked
                     drawSpeed(speed)  # call drawSpeed function to update the speed and value displayed on screen
+                elif event.key == K_g:
+                    backgroundColor(GREEN)
                 elif event.key == K_ESCAPE:
                     terminate()  # exit game
 
@@ -194,7 +197,7 @@ def runGame():
             newHead = {'x': snakeCoords[HEAD]['x'] + 1,
                        'y': snakeCoords[HEAD]['y']}  # move the snake by adding a segment in right direction
         snakeCoords.insert(0, newHead)
-        SCREEN.fill(BGCOLOR)  # fill screen background color
+        backgroundColor(bgColor);
         drawGrid()  # draw grid
         drawSnake(snakeCoords)  # update snake coordinates
         drawApple(apple)  # draw apple on screen
@@ -281,6 +284,10 @@ def drawSpeed(fps):
     speedRect.topleft = (WINDOWWIDTH - 120, 40)
     CLOCK.tick(fps)
     SCREEN.blit(speedSurf, speedRect)
+
+
+def backgroundColor(color):
+    SCREEN.fill(color)  # fill screen background color
 
 
 if __name__ == '__main__':
